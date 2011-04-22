@@ -19,14 +19,30 @@ Now you can manage your indexes
     (with-client privurl
         (indexes)                 ;; List all the indexes of the account
         (index-meta "myindex")    ;; Retrieves metadata of index "myindex"
-        (create-index "newindex") ;; Create a new index
+        (create-index "blog")     ;; Create a new index
         (delete-index "myindex")) ;; Remove the index myindex
 	
 	
 	
 **INDEXING**
 
-Not ready yet
+You can add, update or delete documents from the index
+
+    (def first-post {:docid "p1" 
+                     :fields {:title "Hello, World"
+                              :text "my first post"}})
+    (def second-post {:docid "p2"
+                      :fields {:title "Second post"
+                               :text "Remember to subscribe"}})
+    (def third-post {:docid "p3"
+                     :fields {:title "Third"
+                              :text "I'm bored of this blog"}})
+    (def two-posts [second-post third-post])
+    
+    (with-client privurl
+        (add-document "blog" first-post) ;; Add one document
+        (add-documents "blog" two-posts) ;; Add more documents at once
+        (delete-document "blog" "p1"))   ;; Delete the doc with :docid "p1"
 
 **SCORING VARIABLES**
 
