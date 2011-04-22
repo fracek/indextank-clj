@@ -76,3 +76,9 @@ It cannot contain forward slashes /"
   "Removes a document from the index name"
   [name docid]
   (wrap-request :delete (str "/v1/indexes/" name "/docs?docid=" docid)))
+
+(defn score
+  "Update the scoring variables of a document in index name"
+  [name docid score-map]
+  (let [req-body {:docid docid :variables score-map}]
+    (wrap-request :put (str "/v1/indexes/" name "/docs/variables") (json-str req-body))))

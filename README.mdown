@@ -46,7 +46,14 @@ You can add, update or delete documents from the index
 
 **SCORING VARIABLES**
 
-Not ready yet
+You can add a *scoring variable* to your documents, document variables
+provide additional useful information to create more subtle and
+effective scoring functions.
+
+    (with-client privurl
+        (score "blog" "p2" {"0" 100, "1" 2, "2" 3.5})) ;; 0 => likes
+                                                       ;; 1 => Dislikes
+                                                       ;; 2 => Average rating
 
 **CATEGORIES**
 
