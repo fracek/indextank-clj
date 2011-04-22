@@ -6,7 +6,56 @@ indextank-clj
 How to use it
 ----------
 
-You can't, the library is not ready yet.
+First thing first, define your private URL, you can find it in your
+dashboard
+
+    (def privurl "http://:r4and0m5tr1ng@asd.api.indextank.com")
+    
+
+**INDEX MANAGEMENT**
+   
+Now you can manage your indexes
+
+    (with-client privurl
+        (indexes)                 ;; List all the indexes of the account
+        (index-meta "myindex")    ;; Retrieves metadata of index "myindex"
+        (create-index "newindex") ;; Create a new index
+        (delete-index "myindex")) ;; Remove the index myindex
+	
+	
+	
+**INDEXING**
+
+Not ready yet
+
+**SCORING VARIABLES**
+
+Not ready yet
+
+**CATEGORIES**
+
+Not ready yet
+
+**SCORING FUNCTIONS**
+
+Yep, not ready yet
+
+**SEARCHING**
+
+Read... j/k, not ready yet
+
+**PROMOTING RESULTS**
+
+Not ready yet
+
+**INDEX METADATA**
+
+NRY (Not Ready Yet)
+
+**AUTOCOMPLETE**
+
+NRY
+
 
 
 
