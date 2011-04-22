@@ -82,3 +82,9 @@ It cannot contain forward slashes /"
   [name docid score-map]
   (let [req-body {:docid docid :variables score-map}]
     (wrap-request :put (str "/v1/indexes/" name "/docs/variables") (json-str req-body))))
+
+(defn categorize
+  "Update the categories of a document in index name"
+  [name docid cat-map]
+  (let [req-body {:docid docid :categories cat-map}]
+    (wrap-request :put (str "/v1/indexes/" name "/docs/categories") (json-str req-body))))

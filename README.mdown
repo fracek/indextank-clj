@@ -57,7 +57,12 @@ effective scoring functions.
 
 **CATEGORIES**
 
-Not ready yet
+You can add *categories* to your documents, that is like metadata
+associated with a document
+
+    (with-client privurl
+        (categorize "blog" "p2" {"author" "G. Verga"}))
+	
 
 **SCORING FUNCTIONS**
 
