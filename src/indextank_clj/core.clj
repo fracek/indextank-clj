@@ -8,13 +8,19 @@
   `(binding [*private-url* ~client]
      (do ~@body)))
 
+(defn- json-response
+  "Handle an empty response body"
+  [resp]
+  (when (> (count (:body resp)) 0)
+    (read-json (:body resp))))
+
 (defmacro wrap-request [req-method req-url]
   `(try
      (let [resp# (http/request {:method ~req-method
 			       :url (str *private-url* ~req-url)})
 	   status# (:status resp#)]
        (when (or (= 200 status#) (= 201 status#))
-	 (read-json (:body resp#))))
+	 (json-response resp#)))
      (catch Exception e#
        (print e#))))
 
