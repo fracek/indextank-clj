@@ -11,8 +11,9 @@
 (defn- json-response
   "Handle an empty response body"
   [resp]
-  (when (> (count (:body resp)) 0)
-    (read-json (:body resp))))
+  (if (> (count (:body resp)) 0)
+      (read-json (:body resp))
+      true))
 
 (defn- request-map
   "Make an HTTP request map with an optional request body"
@@ -22,13 +23,18 @@
       (assoc base-req :body req-body)
       base-req)))
 
-(defmacro wrap-request [req-method req-url & [req-body]]
-  `(let [resp# (http/request (request-map ~req-method
-					  (str *private-url* ~req-url)
-					  ~req-body))
-	 status# (:status resp#)]
-     (when (or (= 200 status#) (= 201 status#))
-       (json-response resp#))))
+(defmacro wrap-request
+  "Make a request to req-url, if succeed returns the response body or true,
+if fail returns nil"
+  [req-method req-url & [req-body]]
+  `(try (let [resp# (http/request (request-map ~req-method
+					      (str *private-url* ~req-url)
+					      ~req-body))
+	     status# (:status resp#)]
+	 (when (or (= 200 status#) (= 201 status#))
+	   (json-response resp#)))
+	(catch Exception e#
+	    (print e#))))
 
 (defn indexes
   "Retrieves the metadata of every index in this account"
