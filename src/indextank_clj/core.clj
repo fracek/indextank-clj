@@ -88,3 +88,41 @@ It cannot contain forward slashes /"
   [name docid cat-map]
   (let [req-body {:docid docid :categories cat-map}]
     (wrap-request :put (str "/v1/indexes/" name "/docs/categories") (json-str req-body))))
+
+(defn functions
+  "Retrieves all the functions defined for the index name"
+  [name]
+  (wrap-request :get (str "/v1/indexes/" name "/functions")))
+
+(defn define-function
+  "Defines the function number num for the index name"
+  [name fnum fdef]
+  (wrap-request :put (str "/v1/indexes/" name "/functions/" fnum)
+		(json-str {:definition fdef})))
+
+(defn delete-function
+  "Removes the function num from the index name"
+  [name fnum]
+  (wrap-request :delete (str "/v1/indexes/" name "/functions/" fnum)))
+
+
+;; WARNING: Bad code here :(
+(defn- build-query
+  [query start len fnum]
+  (let [q (str "q=" query)
+	s (when start (str "&start=" start))
+	l (when len   (str "&len=" len))
+	f (when fnum (str "&function=" fnum))]
+    (str q s l f)))
+
+(defn search
+  "Performs a search on the index name"
+  [name query & [{start :start len :len fnum :function :as opts}]]
+  (let [q-str (build-query query start len fnum)]
+    (wrap-request :get (str "/v1/indexes/" name "/search?" q-str))))
+
+(defn promote
+  "Promotes a document for a query on the index name"
+  [name docid query]
+  (wrap-request :put (str "/v1/indexes/" name "/promote")
+		(json-str {:docid docid :query query})))
