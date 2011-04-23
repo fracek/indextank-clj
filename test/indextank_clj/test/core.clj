@@ -1,2 +1,1 @@
-(ns indextank-clj.test.core
-  (:use midje.sweet))
+(ns indextank-clj.test.core)

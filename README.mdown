@@ -1,4 +1,4 @@
-indextank-clj
+IndexTank-clj
 ==========
 
 [Indextank](https://indextank.com/) API Library for Clojure.
@@ -66,25 +66,59 @@ associated with a document
 
 **SCORING FUNCTIONS**
 
-Yep, not ready yet
+*Scoring functions* can be used when searching the index to provide
+ specific orderings for the results. You can read more about this
+ functions on the
+ [official documentation](http://indextank.com/documentation/function-definition).
+
+    (def new-function "-age * relevance")       ;; Define a new function
+    
+    (with-client privurl
+        (functions "blog")                      ;; List the functions of the index
+        (define-function "blog" 1 new-function) ;; Add the function to
+                                                ;; the index
+        (delete-function "blog" 0))             ;; Remove the default
+                                                ;; scoring function
 
 **SEARCHING**
 
-Read... j/k, not ready yet
+You can search your documents in the index. To learn more about the
+search refer to the
+[documentation](http://indextank.com/documentation/api#searching).
+
+    (def opts {:start 0 :len 20 :function 1})   ;; Define some search options
+                                                ;; Start => for paginatin, first position to return
+                                                ;; Len   => how many results
+                                                ;; Function => the scoring function to sort results
+    
+    (with-client privurl
+        (search "blog" "text:subscribe")        ;; Search for 'subscribe in te text
+        (search "blog" "text:subsribe" opts))   ;; Search with different options
+	
+	
 
 **PROMOTING RESULTS**
 
-Not ready yet
+You can promote a document to the top of a query's result page.
 
-**INDEX METADATA**
+    (with-client privurl
+        (promote "blog" "p2" "subscribe"))       ;; When I will search for 'subscribe' 'p2' will be the first result
+	
+	
+Known Issues
+----------
 
-NRY (Not Ready Yet)
 
-**AUTOCOMPLETE**
+* IndexTank-clj doesn't support all the searching options at the moment.
+* Response codes/body are not handled well
+* No tests!
 
-NRY
+License
+----------
 
+Copyright © 2011 Francesco Ceccon
 
+Distributed under the [Eclipse Public License](http://www.opensource.org/licenses/eclipse-1.0), the same as Clojure. Please read the LICENSE file.
 
 
 

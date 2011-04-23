@@ -6,3 +6,4 @@ lib
 classes
 build
 ./indextank-clj
+/docs/uberdoc.html
