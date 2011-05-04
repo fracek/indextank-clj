@@ -2,7 +2,8 @@
   (:require [clj-http.client :as http])
   (:use [clojure.contrib.json :only [read-json json-str]]))
 
-(def *private-url* nil)
+(def #^{:private true} *private-url* nil)
+
 
 (defmacro with-client [client & body]
   `(binding [*private-url* ~client]
