@@ -22,6 +22,7 @@
 				:creation_time "2011-04-26T18:32:00"
 				:size 80}} :blog blog-index))
 
+(def multi-docs [{:added true} {:added true}])
 
 (defn handler [req]
   (pp/pprint req)
@@ -31,7 +32,10 @@
       [:get "/v1/indexes"] {:status 200 :body (json-str my-indexes)}
       [:put "/v1/indexes/new"] {:status 201 :body (json-str new-index)}
       [:put "/v1/indexes/blog"] {:status 204 :body ""}
-      [:delete "/v1/indexes/blog"] {:status 200 :body ""}))
+      [:delete "/v1/indexes/blog"] {:status 200 :body ""}
+      [:put "/v1/indexes/blog/docs"] {:status 200 :body ""}
+      [:put "/v1/indexes/forum/docs"] {:stauts 200 :body (json-str multi-docs)}
+      [:delete "/v1/indexes/blog/docs"] {:stauts 200 :body ""}))
 
 (defn run-server
   []
@@ -71,3 +75,32 @@
   (run-server)
   (let [resp (core/with-client localurl (core/delete-index "blog"))]
     (is (true? resp))))
+
+;; Indexing tests
+
+(def blog-post1 {:docid "p1" :fields {:title "Hello, World" :text "Hello!"}})
+(def forum-posts [blog-post1 {:docid "p2" :fields {:title "Second post"
+						  :text "I'm a veteran now"}}])
+
+;; add-document test
+(deftest test-add-document
+  (run-server)
+  (let [resp (core/with-client localurl (core/add-document "blog" blog-post1))]
+    (is (true? resp))
+    (is (thrown? Exception (core/with-client localurl
+			     (core/add-document "blog" {:docid "p2"}))))
+    (is (thrown? Exception (core/with-client localurl
+			     (core/add-document "blog" {:fields {:a "b"}}))))))
+;; add-documents test
+(deftest test-add-documents
+  (run-server)
+  (let [resp (core/with-client localurl
+	       (core/add-documents "forum" forum-posts))]
+    (is (vector? resp))))
+
+;; delete-document test
+(deftest test-delete-document
+  (run-server)
+  (let [resp (core/with-client localurl (core/delete-document "blog" "p2"))]
+    (is (true? resp))))
+
