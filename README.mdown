@@ -16,17 +16,11 @@ dashboard
    
 Now you can manage your indexes
 
-
-    (indexes privurl)                 ;; List all the indexes of the account
-    (index-meta "myindex" privurl)    ;; Retrieves metadata of index "myindex"
-    (create-index "blog" privurl)     ;; Create a new index
-    (delete-index "myindex" privurl)) ;; Remove the index myindex
-	
-If you want to make more operations at once you can use the `with-client` macro
-
     (with-client privurl
-        (indexes)
-        (index-meta "myindex"))
+        (indexes)                    ;; List all the indexes of the account
+        (index-meta "myindex")       ;; Retrieves metadata of index "myindex"
+        (create-index "blog")        ;; Create a new index
+        (delete-index "myindex"))    ;; Remove the index "myindex"
 	
 	
 **INDEXING**
