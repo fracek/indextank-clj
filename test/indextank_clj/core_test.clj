@@ -26,7 +26,7 @@
 
 (defn handler [req]
   (pp/pprint req)
-  (println)
+  (println) (println)
   (condp = [(:request-method req) (:uri req)]
       [:get "/v1/indexes/blog"] {:stauts 200 :body (json-str blog-index)}
       [:get "/v1/indexes"] {:status 200 :body (json-str my-indexes)}
@@ -85,18 +85,20 @@
 ;; add-document test
 (deftest test-add-document
   (run-server)
-  (let [resp (core/with-client localurl (core/add-document "blog" blog-post1))]
+  (let [resp (core/with-client localurl (core/add-document "blog" blog-post1))
+        resp-multi (core/with-client localurl
+                     (core/add-document "forum" forum-posts))]
     (is (true? resp))
-    (is (thrown? Exception (core/with-client localurl
+    (is (thrown? IllegalArgumentException (core/with-client localurl
 			     (core/add-document "blog" {:docid "p2"}))))
-    (is (thrown? Exception (core/with-client localurl
-			     (core/add-document "blog" {:fields {:a "b"}}))))))
-;; add-documents test
-(deftest test-add-documents
-  (run-server)
-  (let [resp (core/with-client localurl
-	       (core/add-documents "forum" forum-posts))]
-    (is (vector? resp))))
+    (is (thrown? IllegalArgumentException (core/with-client localurl
+			     (core/add-document "blog" {:fields {:a "b"}}))))
+    (is (vector? resp-multi))
+    (is (every? :added resp-multi))
+    (is (thrown? IllegalArgumentException (core/with-client localurl
+                                            (core/add-document "blog"
+                                                               [{:docid "p4"}
+                                                                {:fields {}}]))))))
 
 ;; delete-document test
 (deftest test-delete-document
