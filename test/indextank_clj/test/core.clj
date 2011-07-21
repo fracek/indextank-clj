@@ -1,1 +1,0 @@
-(ns indextank-clj.test.core)
