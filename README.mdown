@@ -40,7 +40,7 @@ You can add, update or delete documents from the index
     
     (with-client privurl
         (add-document "blog" first-post) ;; Add one document
-        (add-documents "blog" two-posts) ;; Add more documents at once
+        (add-document "blog" two-posts)  ;; Add more documents at once
         (delete-document "blog" "p1"))   ;; Delete the doc with :docid "p1"
 
 **SCORING VARIABLES**

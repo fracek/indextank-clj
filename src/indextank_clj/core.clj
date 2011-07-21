@@ -63,22 +63,27 @@
   [doc]
   (and (contains? doc :docid) (contains? doc :fields)))
 
-;; TODO: merge add-document and add-documents
-(defn add-document
-  "Adds a document to the index name"
-  [name doc]
-  (if (valid-doc? doc)
-    (wrap-request :put
-		  (str "/v1/indexes/" name "/docs") (json-str doc))
-    (throw (Exception. "the doc map must have :docid and :fields"))))
+(defn document-arg-type
+  [arg]
+  (cond (and (map? arg) (valid-doc? arg)) :map
+        (and (vector? arg) (every? valid-doc? arg)) :vector
+        :else (throw
+               (IllegalArgumentException.
+                "Either a map or a vector of maps with :docid and :fields keys."))))
 
-(defn add-documents
-  "Adds a batch of documents to the index name"
+(defmulti add-document
+  "Takes a map or a vector of maps and adds them to the index.
+   The maps must have :docid and :fields keys"
+  (fn [name arg]
+    (document-arg-type arg)))
+
+(defmethod add-document :map
+  [name doc]
+  (wrap-request :put (str "/v1/indexes/" name "/docs") (json-str doc)))
+
+(defmethod add-document :vector
   [name docs]
-  (if (every? valid-doc? docs)
-    (wrap-request :put
-		  (str "/v1/indexes/" name "/docs") (json-str docs))
-    (throw (Exception. "the doc map must have :docid and :fields"))))
+  (wrap-request :put (str "/v1/indexes/" name "/docs") (json-str docs)))
 
 ;; We use a querystring because we can't send a body in DELETE
 (defn delete-document
