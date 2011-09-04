@@ -109,8 +109,6 @@ Known Issues
 
 
 * IndexTank-clj doesn't support all the searching options at the moment.
-* Response codes/body are not handled well
-* No tests!
 
 License
 ----------
