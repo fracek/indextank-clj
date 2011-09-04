@@ -1,6 +1,6 @@
 (ns indextank-clj.core-test
   (:use clojure.test)
-  (:use [clojure.contrib.json :only [read-json json-str]])
+  (:use [clojure.data.json :only [read-json json-str]])
   (:require [indextank-clj.core :as core]
 	    [clojure.pprint :as pp]
 	    [ring.adapter.jetty :as ring]))
@@ -25,8 +25,6 @@
 (def multi-docs [{:added true} {:added true}])
 
 (defn handler [req]
-  (pp/pprint req)
-  (println) (println)
   (condp = [(:request-method req) (:uri req)]
       [:get "/v1/indexes/blog"] {:stauts 200 :body (json-str blog-index)}
       [:get "/v1/indexes"] {:status 200 :body (json-str my-indexes)}

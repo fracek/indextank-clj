@@ -1,8 +1,8 @@
 (ns indextank-clj.core
   (:require [clj-http.client :as http])
-  (:use [clojure.contrib.json :only [read-json json-str]]))
+  (:use [clojure.data.json :only [read-json json-str]]))
 
-(def #^{:private true} *private-url* nil)
+(def #^{:private true :dynamic true} *private-url* nil)
 
 
 (defmacro with-client [client & body]
